@@ -46,3 +46,20 @@ async function pegaArquivo2(caminhoArquivo){ /*ASYNC É USADO NO INÍCIO, NA DEC
 /*NOTE QUE TEMOS UM BLOCO TRY / CATCH, EM QUE O TRY SERÁ JUSTAMENTE O BLOCO DE CÓDIGO QUE SERÁ TENTARÁ SER EXECUTADO NA PROMISE, INCLUINDO O IRÁ ACONTECER EM CASO DE ACERTO, JÁ O BLOCO CATCH INDICA JUSTAMENTE PARA O CASO DE ERRO, CASO A PROMISE NÃO TENHA NENHUM RETORNO, O QUE É QUE ACONTECERÁ.
 EXISTE TAMBÉM UM ÚLTIMO BLOCO, O FINALLY, QUE É EXECUTADO INDEPENDENTE SE OCORRE ALGUMA EXCEÇÃO (ERRO) OU NÃO, E DIFERENTE DO CATCH, ELE NÃO RECEBE NENHUM PARÂMETRO DENTRO DOS PARÊNTESES. NÓS PODEMOS FAZER UMA ADIÇÃO NA FUNÇÃO COLOCANDO, POR EXEMPLO, UM BLOCO FINALLY PARA EXIBIR UMA MENSAGEM INFORMANDO QUE A OPERAÇÃO FOI CONCLUÍDA.
 DETALHE: AMBOS CATCH E FINALLY SÃO OPCIONAIS, MAS O TRY PRECISA ESTAR ACOMPANHAO DE ALGUM DELES*/
+
+/*REGEX*/
+
+/*AGORA, PARA RETIRAR DO ARQUIVO DE TEXTO EXATEMENTE OS LINKS QUE PRECISAMOS PARA QUE NOSSA API FUNCIONE, FAREMOS USO DE REGEX, OU REGULAR EXPRESSIONS, QUE NADA MAIS É DO QUE COMANDOS PRÓPRIOS EM CADA LINGUAGEM QUE VÃO FUNCIONAR PARA TRATAR O TEXTO E RETIRAR SOMENTE AQUILO QUE BUSCAMOS*/
+
+const textoTeste = 'São geralmente recuperados a partir de um objeto [FileList](https://developer.mozilla.org/pt-BR/docs/Web/API/FileList) que é retornado como resultado da seleção, pelo usuário, de arquivos através do elemento [<input>](https://developer.mozilla.org/pt-BR/docs/Web/HTML/Element/Input), a partir do objeto [DataTransfer](https://developer.mozilla.org/pt-BR/docs/Web/API/DataTransfer) utilizado em operações de arrastar e soltar, ou a partir da API `mozGetAsFile()` em um [HTMLCanvasElement](https://developer.mozilla.org/pt-BR/docs/Web/API/HTMLCanvasElement). Em Gecko, códigos com privilégiios podem criar objetos File representando qualquer arquivo local sem a intereção do usuário (veja [Implementation notes](https://developer.mozilla.org/pt-BR/docs/Web/API/File#implementation_notes) para mais informações.'
+
+/*DECLARAMOS UM TEXTO TESTE QUE SERÁ USADO PARA FAZER A VISUALIZAÇÃO DE COMO FUNCIONA O REGEX*/
+
+function extraiLinks(texto) {
+    const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm; /*ESSE É O COMANDO REGEX QUE IRÁ EXTRAIR SOMENTE O QUE PRECISAMOS DO TEXTO*/
+    const capturas = regex.exec(texto); /*E ESTE É UM COMANDO PRÓPRIO DO OBJETO REGEX NO JAVASCRIPT QUE IRÁ APRESENTAR O RESULTADO*/
+    console.log(capturas);
+};
+/*E DEPOIS FAZEMOS A DECLARAÇÃO DA FUNÇÃO QUE USARÁ DE REGEX E SEUS MÉTODOS PARA EXTRAIR OS LINKS DO TEXTO TESTE*/
+
+extraiLinks(textoTeste)
