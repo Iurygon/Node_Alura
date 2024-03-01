@@ -36,7 +36,7 @@ async function pegaArquivo2(caminhoArquivo){ /*ASYNC É USADO NO INÍCIO, NA DEC
     try{ 
         const encoding = 'utf-8';
         const texto = await fs.promises.readFile(caminhoArquivo, encoding); /*AWAIT É USADO EM TODOS OS TRECHOS DO CÓDIGO QUE ESPERAM O RETORNO DE UMA PROMESSA */
-        console.log(chalk.green(texto));
+        extraiLinks(texto);
     }
     catch(erro){
         trataErro(erro)
@@ -55,11 +55,19 @@ const textoTeste = 'São geralmente recuperados a partir de um objeto [FileList]
 
 /*DECLARAMOS UM TEXTO TESTE QUE SERÁ USADO PARA FAZER A VISUALIZAÇÃO DE COMO FUNCIONA O REGEX*/
 
-function extraiLinks(texto) {
-    const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm; /*ESSE É O COMANDO REGEX QUE IRÁ EXTRAIR SOMENTE O QUE PRECISAMOS DO TEXTO*/
-    const capturas = regex.exec(texto); /*E ESTE É UM COMANDO PRÓPRIO DO OBJETO REGEX NO JAVASCRIPT QUE IRÁ APRESENTAR O RESULTADO*/
-    console.log(capturas);
-};
+// function extraiLinks(texto) {
+//     const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm; /*ESSE É O COMANDO REGEX QUE IRÁ EXTRAIR SOMENTE O QUE PRECISAMOS DO TEXTO*/
+//     const capturas = regex.exec(texto); /*E ESTE É UM COMANDO PRÓPRIO DO OBJETO REGEX NO JAVASCRIPT QUE IRÁ APRESENTAR O RESULTADO*/
+//     console.log(capturas);
+// };
 /*E DEPOIS FAZEMOS A DECLARAÇÃO DA FUNÇÃO QUE USARÁ DE REGEX E SEUS MÉTODOS PARA EXTRAIR OS LINKS DO TEXTO TESTE*/
+
+/*PORÉM, FAREMOS A FUNÇÃO DA SEGUINTE FORMA, PARA RETORNAR TODOS OS RESULTADOS NECESSÁRIOS AO INVÉS DE APENAS UM, COMO ESTAVA SENDO*/
+function extraiLinks(texto){
+    const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;
+    const capturas = [...texto.matchAll(regex)]; /*MATCHALL É UM MÉTODO PARA COMBINAR TODAS AS OCORRÊNCIAS DO NOSSO REGEX*/
+    const resultados = capturas.map(captura => ({[captura[1]]: captura[2]})); /*O USO DOS COLCHETES SÃO NECESSÁRIOS QUANDO PASSAMOS UM ELEMENTO DE UM ARRAY COMO CHAVE DE UM OBJETO. ALÉM DO MAIS, O USO DOS PARÊNTESES SERVE PARA QUE O SISTEMA RECONHEÇA QUE É UMA CHAVE DE UM OBJETO E NÃO DE UMA FUNÇÃO*/
+    console.log(resultados)
+}
 
 extraiLinks(textoTeste)
