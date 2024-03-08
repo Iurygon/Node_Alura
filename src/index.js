@@ -19,24 +19,24 @@ function trataErro(erro){
 
 /*O CÓDIGO ACIMA FOI COMENTADO PORQUE, COMO NÃO HÁ COMO SABER O TAMANHO DO ARQUIVO QUE SERÁ PASSADO, É INVIÁVEL SEGUIR COM O CÓDIGO DE MANEIRA SÍNCRONA, AGUARDANDO ATÉ QUE TENHA O RETORNO FUNÇÃO. POR ISSO, ELE FOI SUBSTITUÍDO PELO CÓDIGO A SEGUIR QUE AJE DE MANEIRA ASSÍNCRONA*/
 
-function pegaArquivo(caminhoArquivo){
-    const enconding = 'utf-8';
-    fs.promises /*AQUI É TAMBÉM USADO O MÉTODO '.PROMISES' DA BIBLIOTECA FS, MÉTODO ESSE QUE É USADO PARA TRABALHAR COM CÓDIGO ASSÍCRONO. ESSAS PROMISES, OU PROMESSAS, É JUSTAMENTE QUANDO FALAMOS DE CÓDIGO ASSÍNCRONO*/
-        .readFile(caminhoArquivo, enconding) 
-        .then((texto) => console.log(chalk.green(texto)))
-        .catch(trataErro);
-        /*ESSES TRÊS MÉTODOS FUNCIONAM JUNTOS. O 'READFILE' DEVOLVE UMA PROMESSA QUE SERÁ RECEBIDA E TRATADA POR 'THEN', E CASO HAJA ALGUM ERRO DURANTE SEU TRATAMENTO, ELA SERÁ LANÇADO PARA 'CATCH' */
-};
+// function pegaArquivo2(caminhoArquivo){
+//     const enconding = 'utf-8';
+//     fs.promises /*AQUI É TAMBÉM USADO O MÉTODO '.PROMISES' DA BIBLIOTECA FS, MÉTODO ESSE QUE É USADO PARA TRABALHAR COM CÓDIGO ASSÍCRONO. ESSAS PROMISES, OU PROMESSAS, É JUSTAMENTE QUANDO FALAMOS DE CÓDIGO ASSÍNCRONO*/
+//         .readFile(caminhoArquivo, enconding) 
+//         .then((texto) => console.log(chalk.green(texto)))
+//         .catch(trataErro);
+//         /*ESSES TRÊS MÉTODOS FUNCIONAM JUNTOS. O 'READFILE' DEVOLVE UMA PROMESSA QUE SERÁ RECEBIDA E TRATADA POR 'THEN', E CASO HAJA ALGUM ERRO DURANTE SEU TRATAMENTO, ELA SERÁ LANÇADO PARA 'CATCH' */
+// };
 
-pegaArquivo('texto.md')
+// pegaArquivo('texto.md')
 
 /*ESSE PRIMEIRO MÉTODO DE CÓDIGO ASSÍNCRONO FOI FEITO UTILIZANDO O .THEN(). TAMBÉM É POSSÍVEL UTILIZANDO AS PALAVRAS CHAVE ASYNC E AWAIT, OU O PRÓPRIO OBJETO PROMISE E SEUS MÉTODOS. UTILIZANDO O MÉTODO ASYNC/AWAIT, NÓS PODEMOS REESCREVER ESSA FUNÇÃO DE FORMA MAIS SIMPLES, DA SEGUINTE FORMA*/
 
-async function pegaArquivo2(caminhoArquivo){ /*ASYNC É USADO NO INÍCIO, NA DECLARAÇÃO DA FUNÇÃO, PARA IN FORMAR QUE SE TRATA DE UMA FUNÇÃO ASSÍNCRONA */
+async function pegaArquivo(caminhoArquivo){ /*ASYNC É USADO NO INÍCIO, NA DECLARAÇÃO DA FUNÇÃO, PARA IN FORMAR QUE SE TRATA DE UMA FUNÇÃO ASSÍNCRONA */
     try{ 
         const encoding = 'utf-8';
         const texto = await fs.promises.readFile(caminhoArquivo, encoding); /*AWAIT É USADO EM TODOS OS TRECHOS DO CÓDIGO QUE ESPERAM O RETORNO DE UMA PROMESSA */
-        extraiLinks(texto);
+        return extraiLinks(texto);
     }
     catch(erro){
         trataErro(erro)
@@ -67,7 +67,7 @@ function extraiLinks(texto){
     const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;
     const capturas = [...texto.matchAll(regex)]; /*MATCHALL É UM MÉTODO PARA COMBINAR TODAS AS OCORRÊNCIAS DO NOSSO REGEX*/
     const resultados = capturas.map(captura => ({[captura[1]]: captura[2]})); /*O USO DOS COLCHETES SÃO NECESSÁRIOS QUANDO PASSAMOS UM ELEMENTO DE UM ARRAY COMO CHAVE DE UM OBJETO. ALÉM DO MAIS, O USO DOS PARÊNTESES SERVE PARA QUE O SISTEMA RECONHEÇA QUE É UMA CHAVE DE UM OBJETO E NÃO DE UMA FUNÇÃO*/
-    console.log(resultados)
+    return resultados.length !== 0 ? resultados : 'Não há links no arquivo'
 }
 
 /*extraiLinks(textoTeste)*/

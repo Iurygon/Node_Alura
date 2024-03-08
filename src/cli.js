@@ -1,6 +1,7 @@
 /*ESTE ARQUIVO SERÁ ONDE DAREMOS CONTINUIDADE NO CURSO*/
 
 import pegaArquivo from "./index.js"
+import chalk from "chalk";
 
 const caminho = process.argv
 
@@ -11,4 +12,9 @@ ANALISANDO NO CONSOLE.LOG QUE FIZEMOS ACIMA, VEMOS QUE SERÁ RETORNAD PELO SISTE
 
 SENDO ASSIM, PODEMOS USAR DISSO PARA PASSAR O CAMINHO DO ARQUIVO QUE QUEREMOS ATRAVÉS DA POSIÇÃO DO ARRAY DA SEGUINTE FORMA:*/
 
-pegaArquivo(caminho[2])
+async function processaTexto(caminho){
+    const resultado = await pegaArquivo(caminho[2]);
+    console.log(chalk.yellow('Lista de links:'), resultado);
+};
+
+processaTexto(caminho)
