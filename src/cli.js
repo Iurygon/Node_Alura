@@ -13,12 +13,25 @@ ANALISANDO NO CONSOLE.LOG QUE FIZEMOS ACIMA, VEMOS QUE SERÁ RETORNAD PELO SISTE
 
 SENDO ASSIM, PODEMOS USAR DISSO PARA PASSAR O CAMINHO DO ARQUIVO QUE QUEREMOS ATRAVÉS DA POSIÇÃO DO ARRAY DA SEGUINTE FORMA:*/
 
-function imprimeLista(resultado){
-    console.log(chalk.yellow('Lista de links:'), resultado);
+function imprimeLista(resultado, identificaArquivo = ''){
+    console.log(
+        chalk.yellow('Lista de links:'),
+        chalk.black.bgGreen(identificaArquivo),
+        resultado
+    );
 };
 
 async function processaTexto(argumentos){
     const caminho = argumentos[2];
+    try{
+        fs.lstatSync(caminho) /*Verifica se o caminho passado no console realmente existe ou não. Caso não exista, será chamado o erro*/
+    }
+    catch(erro){
+        if(erro.code === 'ENOENT'){ /*ENOENT VEM DE ERROR NO ENTITY*/
+            console.log(chalk.red('Arquivo ou diretório não encontrado'));
+            return;
+        };
+    }
     if(fs.lstatSync(caminho).isFile()){    /*VERIFICA SE O CAMINHO PASSADO NO CONSOLE É UM ARQUIVO*/ 
         const resultado = await pegaArquivo(caminho); /*ESSE ARQUIVO É PASSADO PARA A FUNÇÃO 'PEGAARQUIVO'*/
         imprimeLista(resultado) /*E É EXIBIDO O RESULTADO COM A FUNÇÃO 'IMPRIMELISTA' */
@@ -27,8 +40,7 @@ async function processaTexto(argumentos){
         const arquivos = await fs.promises.readdir(caminho);    /*ESSA FUNÇÃO PROMISE FAZ UMA LEITURA DO DIRETÓRIO E GERA UM ARRAY COM OS ARQUIVOS*/
             arquivos.forEach(async (nomeDeArquivo) => {   /*EM CADA ARQUIVO DO ARRAY É CHAMADA UMA FUNÇÃO QUE IRÁ CHAMAR 'PEGAARQUIVO' PASSANDO O CAMINHBO DO ARQUIVO*/
             const lista = await pegaArquivo(`${caminho}/${nomeDeArquivo}`)
-            console.log(`${caminho}/${nomeDeArquivo}`) 
-            imprimeLista(lista)
+            imprimeLista(lista, nomeDeArquivo)
         })
     };
 };
