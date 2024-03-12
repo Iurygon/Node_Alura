@@ -1,8 +1,9 @@
 /*ESTE ARQUIVO SERÁ ONDE DAREMOS CONTINUIDADE NO CURSO*/
 
-import pegaArquivo from "./index.js"
+import pegaArquivo from "./index.js";
 import chalk from "chalk";
-import fs from 'fs'
+import fs from 'fs';
+import listaValidada from "./http-validacao.js";
 
 const caminho = process.argv
 
@@ -13,16 +14,26 @@ ANALISANDO NO CONSOLE.LOG QUE FIZEMOS ACIMA, VEMOS QUE SERÁ RETORNAD PELO SISTE
 
 SENDO ASSIM, PODEMOS USAR DISSO PARA PASSAR O CAMINHO DO ARQUIVO QUE QUEREMOS ATRAVÉS DA POSIÇÃO DO ARRAY DA SEGUINTE FORMA:*/
 
-function imprimeLista(resultado, identificaArquivo = ''){
-    console.log(
-        chalk.yellow('Lista de links:'),
-        chalk.black.bgGreen(identificaArquivo),
-        resultado
-    );
+function imprimeLista(valida, resultado, identificaArquivo = ''){
+    if(valida){
+        console.log(
+            chalk.yellow('Lista validada:'),
+            chalk.black.bgGreen(identificaArquivo),
+            listaValidada(resultado)
+        );
+    }
+    else{
+        console.log(
+            chalk.yellow('Lista de links:'),
+            chalk.black.bgGreen(identificaArquivo),
+            resultado
+        );
+    };
 };
 
 async function processaTexto(argumentos){
     const caminho = argumentos[2];
+    const valida = argumentos[3] === '--valida';
     try{
         fs.lstatSync(caminho) /*Verifica se o caminho passado no console realmente existe ou não. Caso não exista, será chamado o erro*/
     }
@@ -34,13 +45,13 @@ async function processaTexto(argumentos){
     }
     if(fs.lstatSync(caminho).isFile()){    /*VERIFICA SE O CAMINHO PASSADO NO CONSOLE É UM ARQUIVO*/ 
         const resultado = await pegaArquivo(caminho); /*ESSE ARQUIVO É PASSADO PARA A FUNÇÃO 'PEGAARQUIVO'*/
-        imprimeLista(resultado) /*E É EXIBIDO O RESULTADO COM A FUNÇÃO 'IMPRIMELISTA' */
+        imprimeLista(valida, resultado) /*E É EXIBIDO O RESULTADO COM A FUNÇÃO 'IMPRIMELISTA' */
     }
     else if(fs.lstatSync(caminho).isDirectory()){   /*VERIFICA SE O CAMINHO PASSADO NO CONSOLE É UM DIRETÓRIO*/
         const arquivos = await fs.promises.readdir(caminho);    /*ESSA FUNÇÃO PROMISE FAZ UMA LEITURA DO DIRETÓRIO E GERA UM ARRAY COM OS ARQUIVOS*/
             arquivos.forEach(async (nomeDeArquivo) => {   /*EM CADA ARQUIVO DO ARRAY É CHAMADA UMA FUNÇÃO QUE IRÁ CHAMAR 'PEGAARQUIVO' PASSANDO O CAMINHBO DO ARQUIVO*/
             const lista = await pegaArquivo(`${caminho}/${nomeDeArquivo}`)
-            imprimeLista(lista, nomeDeArquivo)
+            imprimeLista(valida, lista, nomeDeArquivo)
         })
     };
 };
