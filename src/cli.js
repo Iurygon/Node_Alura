@@ -14,12 +14,12 @@ ANALISANDO NO CONSOLE.LOG QUE FIZEMOS ACIMA, VEMOS QUE SERÁ RETORNAD PELO SISTE
 
 SENDO ASSIM, PODEMOS USAR DISSO PARA PASSAR O CAMINHO DO ARQUIVO QUE QUEREMOS ATRAVÉS DA POSIÇÃO DO ARRAY DA SEGUINTE FORMA:*/
 
-function imprimeLista(valida, resultado, identificaArquivo = ''){
+async function imprimeLista(valida, resultado, identificaArquivo = ''){
     if(valida){
         console.log(
             chalk.yellow('Lista validada:'),
             chalk.black.bgGreen(identificaArquivo),
-            listaValidada(resultado)
+            await listaValidada(resultado)
         );
     }
     else{
